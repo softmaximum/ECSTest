@@ -18,7 +18,7 @@ using Unity.Transforms;
 
 namespace Game.Systems
 {
-#if USE_JOB                
+#if USE_JOB
         public class FireSystem : JobComponentSystem
         {
             protected override JobHandle OnUpdate(JobHandle inputDeps)
@@ -30,21 +30,21 @@ namespace Game.Systems
 
                 return job.Schedule(this, 1, inputDeps);
             }
-        }    
+        }
 #else
         public class FireSystem : ComponentSystem
         {
-            
+
             private struct PlayerGroup
             {
                 public ComponentDataArray<Player> Player;
                 public ComponentDataArray<Position> Position;
                 public ComponentDataArray<Rotation> Rotation;
                 public EntityArray Entity;
-                public int Length;            
+                public readonly int Length;
             }
 
-            [Inject] private PlayerGroup _group;            
+            [Inject] private PlayerGroup _group;
             protected override void OnUpdate()
             {
                 for (var i = 0; i < _group.Length; i++)
@@ -55,7 +55,7 @@ namespace Game.Systems
                     }
                 }
             }
-            
+
             private static void MakeFire(float3 position, float3 direction)
             {
                 var entityManager = World.Active.GetOrCreateManager<EntityManager>();
@@ -68,7 +68,7 @@ namespace Game.Systems
                 var entity = entityManager.CreateEntity(fireEntityArchetype);
                 entityManager.SetComponentData(entity, new Position(position));
                 entityManager.SetComponentData(entity, new Movement(direction, 1.0f));
-            }            
+            }
         }
-#endif    
-} 
+#endif
+}

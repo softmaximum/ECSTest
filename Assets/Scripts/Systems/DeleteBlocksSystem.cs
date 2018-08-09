@@ -11,20 +11,20 @@ namespace Game.Systems
         {
             public ComponentDataArray<Position> PlayerPositiopns;
             public ComponentDataArray<PlayerInput> PlayerInputs;
-            public int Length;
+            public readonly int Length;
         }
-        
+
         public struct BlocksGroup
         {
             public ComponentDataArray<Block> Blocks;
             public ComponentDataArray<Position> Positions;
             public EntityArray EntityArray;
-            public int Length;
+            public readonly int Length;
         }
 
         [Inject] private PlayerGroup _playerGroup;
         [Inject] private BlocksGroup _blocksGroup;
-        
+
         protected override void OnUpdate()
         {
             for (int i = 0; i < _blocksGroup.Length; i++)
