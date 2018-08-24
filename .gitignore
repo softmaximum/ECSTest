@@ -3,3 +3,7 @@ obj
 Test.sln
 Test.userprefs
 Library
+.idea/.idea.ECSTest/.idea
+riderModule.iml
+ECSTest.sln
+ECSTest.sln.DotSettings.user
