@@ -15,24 +15,24 @@ namespace Game.Init
 		[SerializeField] private Mesh _blockMesh;
 		[SerializeField] private Material _blockMaterial;
 		[SerializeField] private GameObject _spawnPrefab;
-		
+
 		private void Start()
 		{
 			var entityManager = World.Active.GetOrCreateManager<EntityManager>();
-			
+
 			CreatePlayer(entityManager);
 			CreateSpawner(entityManager);
-//			CreateBlocks(entityManager);			
+//			CreateBlocks(entityManager);
 		}
 
 		private void CreateSpawner(EntityManager entityManager)
 		{
 			var spawnerArchtype = entityManager.CreateArchetype
 			(
-				typeof(Spawner), 
+				typeof(Spawner),
 				typeof(Position)
 			);
-			
+
 			var spawner = entityManager.CreateEntity(spawnerArchtype);
 			entityManager.SetSharedComponentData(spawner, new Spawner
 			{
@@ -46,7 +46,6 @@ namespace Game.Init
 		{
 			var playerArchetype = entityManager.CreateArchetype
 			(
-				typeof(TransformMatrix),
 				typeof(Position),
 				typeof(Rotation),
 				typeof(MeshInstanceRenderer),
@@ -66,7 +65,6 @@ namespace Game.Init
 		{
 			var blockAcrhetype = entityManager.CreateArchetype
 			(
-				typeof(TransformMatrix),
 				typeof(Rotation),
 				typeof(Position),
 				typeof(MeshInstanceRenderer),

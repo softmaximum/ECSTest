@@ -66,7 +66,7 @@ namespace Game.Systems
                 );
 
                 var entity = entityManager.CreateEntity(fireEntityArchetype);
-                entityManager.SetComponentData(entity, new Position(position));
+                entityManager.SetComponentData(entity, new Position{Value = position});
                 entityManager.SetComponentData(entity, new Movement(direction, 1.0f));
             }
         }
