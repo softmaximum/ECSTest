@@ -1,6 +1,8 @@
 ﻿//#define USE_JOB
 
+using Game.Init;
 using Unity.Entities;
+using Unity.Rendering;
 using UnityEngine;
 
 #if USE_JOB
@@ -45,6 +47,14 @@ namespace Game.Systems
             }
 
             [Inject] private PlayerGroup _group;
+
+            private EntityManager _entityManager;
+
+            protected override void OnCreateManager(int capacity)
+            {
+                _entityManager = World.Active.GetExistingManager<EntityManager>();
+            }
+
             protected override void OnUpdate()
             {
                 for (var i = 0; i < _group.Length; i++)
@@ -56,18 +66,17 @@ namespace Game.Systems
                 }
             }
 
-            private static void MakeFire(float3 position, float3 direction)
+            private void MakeFire(float3 position, float3 direction)
             {
-                var entityManager = World.Active.GetOrCreateManager<EntityManager>();
-                var fireEntityArchetype = entityManager.CreateArchetype
-                (
-                    typeof(Movement),
-                    typeof(Position)
-                );
+                var entity = _entityManager.Instantiate(GetBulletPrefab());
+                _entityManager.AddComponentData(entity, new Movement(direction, 0.1f));
+                _entityManager.AddComponentData(entity, new LifeTime{TimeLeft = 3.0f});
+            }
 
-                var entity = entityManager.CreateEntity(fireEntityArchetype);
-                entityManager.SetComponentData(entity, new Position{Value = position});
-                entityManager.SetComponentData(entity, new Movement(direction, 1.0f));
+            private static GameObject GetBulletPrefab()
+            {
+                var main = Object.FindObjectOfType<Main>();
+                return main.BulletPrefab;
             }
         }
 #endif

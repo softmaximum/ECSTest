@@ -11,7 +11,7 @@ namespace Jobs
 
         private static void MakeFire(float3 position, float3 direction)
         {
-            var entityManager = World.Active.GetOrCreateManager<EntityManager>();
+            var entityManager = World.Active.GetExistingManager<EntityManager>();
             var fireEntityArchetype = entityManager.CreateArchetype
             (
                 typeof(Movement),

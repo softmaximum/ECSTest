@@ -1,6 +1,7 @@
 ﻿using Jobs;
 using Unity.Entities;
 using Unity.Jobs;
+using UnityEngine;
 
 namespace Game.Systems
 {
@@ -8,10 +9,10 @@ namespace Game.Systems
     {
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
-            var job = new MovementJob();
+            var job = new MovementJob{DeltaTime = Time.deltaTime};
 
             return job.Schedule(this, 1, inputDeps);
         }
-        
+
     }
 }

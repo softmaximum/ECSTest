@@ -15,13 +15,21 @@ namespace Game.Init
 		[SerializeField] private Mesh _blockMesh;
 		[SerializeField] private Material _blockMaterial;
 		[SerializeField] private GameObject _spawnPrefab;
+		[SerializeField] private GameObject _bulletPrefab;
+		[SerializeField] private GameObject _playerPrefab;
+
+		public GameObject BulletPrefab
+		{
+			get { return _bulletPrefab; }
+			set { _bulletPrefab = value; }
+		}
 
 		private void Start()
 		{
 			var entityManager = World.Active.GetOrCreateManager<EntityManager>();
 
 			CreatePlayer(entityManager);
-			CreateSpawner(entityManager);
+//			CreateSpawner(entityManager);
 //			CreateBlocks(entityManager);
 		}
 
@@ -48,12 +56,15 @@ namespace Game.Init
 			(
 				typeof(Position),
 				typeof(Rotation),
+				typeof(Scale),
 				typeof(MeshInstanceRenderer),
 				typeof(PlayerInput),
 				typeof(Player)
 			);
 
 			var player = entityManager.CreateEntity(playerArchetype);
+			entityManager.SetComponentData(player, new Rotation{Value = quaternion.eulerXYZ(90.0f, 0.0f,0.0f)});
+			entityManager.SetComponentData(player, new Scale{Value = new float3(1.0f, 3.0f, 1.0f)});
 			entityManager.SetSharedComponentData(player, new MeshInstanceRenderer
 			{
 				mesh = _playerMesh,
