@@ -5,9 +5,11 @@ using UnityEngine;
 using Game.Components;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UpdateGroups;
 
 namespace Game.Systems
 {
+    [UpdateInGroup(typeof(ExecuteUpdateGroup))]
     public class FireSystem : ComponentSystem
     {
         private struct PlayerGroup
@@ -44,7 +46,8 @@ namespace Game.Systems
             var entity = _entityManager.Instantiate(GetBulletPrefab());
             _entityManager.SetComponentData(entity, new Position{Value = position});
             _entityManager.AddComponentData(entity, new Movement(direction, 1f));
-            _entityManager.AddComponentData(entity, new LifeTime{TimeLeft = 10.0f});
+            _entityManager.AddComponentData(entity, new LifeTime{TimeLeft = 5.0f});
+            _entityManager.AddComponentData(entity, new Bullet());
         }
 
         private static GameObject GetBulletPrefab()

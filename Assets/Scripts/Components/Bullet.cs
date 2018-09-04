@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Game.Components
 {
-    public struct Bullet : ISharedComponentData
+    public struct Bullet : IComponentData
     {
-        public GameObject Prefab;
+        
     }
 }

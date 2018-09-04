@@ -5,8 +5,8 @@ using UnityEngine;
 namespace Game.Components
 {
     [Serializable]
-    public struct Explosion : ISharedComponentData
+    public struct Explosion : IComponentData
     {
-        public GameObject Prefab;
+
     }
 }

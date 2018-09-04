@@ -1,9 +1,11 @@
 ﻿using Game.Components;
-using Unity.Collections;
 using Unity.Entities;
+using UnityEngine;
+using UpdateGroups;
 
 namespace Game.Systems
 {
+    [UpdateInGroup(typeof(CleanupUpdateGrpup))]
     public class DestroyEntitySystem : ComponentSystem
     {
         private struct DestroyGroup

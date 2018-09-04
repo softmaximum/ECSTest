@@ -16,8 +16,10 @@ namespace Game.Init
 		[SerializeField] private Material _blockMaterial;
 		[SerializeField] private GameObject _spawnPrefab;
 		[SerializeField] private GameObject _bulletPrefab;
+		[SerializeField] private GameObject _explosionPrefab;
 
 		public GameObject BulletPrefab => _bulletPrefab;
+		public GameObject ExplosionPrefab => _explosionPrefab;
 
 		private void Start()
 		{

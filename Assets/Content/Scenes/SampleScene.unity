@@ -291,6 +291,8 @@ MonoBehaviour:
     type: 2}
   _bulletPrefab: {fileID: 1130895650402398, guid: 286bc1764acdf43899ce357d600514bd,
     type: 2}
+  _explosionPrefab: {fileID: 1130895650402398, guid: 7096174f43e224640a838ab15deebc51,
+    type: 2}
 --- !u!4 &1755216135
 Transform:
   m_ObjectHideFlags: 0
