@@ -1,4 +1,5 @@
 ﻿using Game.Components;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
@@ -26,6 +27,7 @@ namespace Game.Systems
         protected override void OnUpdate()
         {
             var deltaTime = Time.deltaTime;
+            var entityToDestroy = new NativeList<Entity>(Allocator.Temp);
             for (var i = 0; i < _group.Length; i++)
             {
                 var lifeTime = _group.LifeTime[i];
@@ -33,9 +35,15 @@ namespace Game.Systems
                 _group.LifeTime[i] = lifeTime;
                 if (lifeTime.TimeLeft <= 0)
                 {
-                    _entityManager.DestroyEntity(_group.Entity[i]);
+                    entityToDestroy.Add(_group.Entity[i]);
                 }
             }
+
+            for (var i = 0; i < entityToDestroy.Length; i++)
+            {
+                _entityManager.DestroyEntity(entityToDestroy[i]);
+            }
+            entityToDestroy.Dispose();
         }
     }
 }

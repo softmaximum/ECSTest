@@ -16,13 +16,8 @@ namespace Game.Init
 		[SerializeField] private Material _blockMaterial;
 		[SerializeField] private GameObject _spawnPrefab;
 		[SerializeField] private GameObject _bulletPrefab;
-		[SerializeField] private GameObject _playerPrefab;
 
-		public GameObject BulletPrefab
-		{
-			get { return _bulletPrefab; }
-			set { _bulletPrefab = value; }
-		}
+		public GameObject BulletPrefab => _bulletPrefab;
 
 		private void Start()
 		{
@@ -63,8 +58,8 @@ namespace Game.Init
 			);
 
 			var player = entityManager.CreateEntity(playerArchetype);
-			entityManager.SetComponentData(player, new Rotation{Value = quaternion.eulerXYZ(90.0f, 0.0f,0.0f)});
-			entityManager.SetComponentData(player, new Scale{Value = new float3(1.0f, 3.0f, 1.0f)});
+			entityManager.SetComponentData(player, new Rotation{Value = quaternion.identity});
+			entityManager.SetComponentData(player, new Scale{Value = new float3(1.0f, 1.0f, 1.0f)});
 			entityManager.SetSharedComponentData(player, new MeshInstanceRenderer
 			{
 				mesh = _playerMesh,

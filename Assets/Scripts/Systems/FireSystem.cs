@@ -1,39 +1,13 @@
-﻿//#define USE_JOB
-
-using Game.Init;
+﻿using Game.Init;
 using Unity.Entities;
-using Unity.Rendering;
 using UnityEngine;
 
-#if USE_JOB
-using Jobs;
-using Unity.Jobs;
-#else
 using Game.Components;
 using Unity.Mathematics;
 using Unity.Transforms;
-#endif
-
-
-
-
 
 namespace Game.Systems
 {
-#if USE_JOB
-        public class FireSystem : JobComponentSystem
-        {
-            protected override JobHandle OnUpdate(JobHandle inputDeps)
-            {
-                var job = new FireJob
-                {
-                    Fire = Input.GetKeyUp(KeyCode.G)
-                };
-
-                return job.Schedule(this, 1, inputDeps);
-            }
-        }
-#else
         public class FireSystem : ComponentSystem
         {
 
@@ -61,7 +35,7 @@ namespace Game.Systems
                 {
                     if (Input.GetKeyUp(KeyCode.G))
                     {
-                        MakeFire(_group.Position[i].Value, math.forward(_group.Rotation[i].Value));
+                        MakeFire(_group.Position[i].Value, math.up(_group.Rotation[i].Value));
                     }
                 }
             }
@@ -69,8 +43,9 @@ namespace Game.Systems
             private void MakeFire(float3 position, float3 direction)
             {
                 var entity = _entityManager.Instantiate(GetBulletPrefab());
-                _entityManager.AddComponentData(entity, new Movement(direction, 0.1f));
-                _entityManager.AddComponentData(entity, new LifeTime{TimeLeft = 3.0f});
+                _entityManager.SetComponentData(entity, new Position{Value = position});
+                _entityManager.AddComponentData(entity, new Movement(direction, 1f));
+                _entityManager.AddComponentData(entity, new LifeTime{TimeLeft = 10.0f});
             }
 
             private static GameObject GetBulletPrefab()
@@ -79,5 +54,4 @@ namespace Game.Systems
                 return main.BulletPrefab;
             }
         }
-#endif
 }
