@@ -1,21 +1,27 @@
 ﻿using Game.Components;
 using Unity.Entities;
-using UnityEngine;
+using Unity.Jobs;
 
 namespace Jobs
 {
-    public struct LifeTimeJob : IJobProcessComponentData<LifeTime>
+    public struct LifeTimeJob : IJob
     {
+        public ComponentDataArray<LifeTime> LifeTime;
+        public EntityArray Entity;
         public float DeltaTime;
+        public EntityCommandBuffer CommandBuffer;
 
-        public void Execute(ref LifeTime data)
+        public void Execute()
         {
-            data.TimeLeft -= DeltaTime;
-            if (data.TimeLeft <= 0)
+            for (var i = 0; i < Entity.Length; i++)
             {
-                Debug.Log("REMOVE");
-//                var entityManager = World.Active.GetExistingManager<EntityManager>();
-//                entityManager.DestroyEntity(data.Entity);
+                var lifeTime = LifeTime[i];
+                lifeTime.TimeLeft -= DeltaTime;
+                LifeTime[i] = lifeTime;
+                if (lifeTime.TimeLeft <= 0)
+                {
+                    CommandBuffer.AddComponent(Entity[i], new DestroyEntity());
+                }
             }
         }
     }

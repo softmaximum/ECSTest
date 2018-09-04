@@ -1,11 +1,12 @@
 ﻿using Game.Components;
-using Unity.Collections;
+using Jobs;
 using Unity.Entities;
+using Unity.Jobs;
 using UnityEngine;
 
 namespace Game.Systems
 {
-    public class LifeTimeSystem : ComponentSystem
+    public class LifeTimeSystem : JobComponentSystem
     {
         private struct LifeTimeGroup
         {
@@ -14,36 +15,20 @@ namespace Game.Systems
             public readonly int Length;
         }
 
-        [Inject]
-        private LifeTimeGroup _group;
-        private EntityManager _entityManager;
+        [Inject] private LifeTimeGroup _group;
+        [Inject] private LifeTimeSystemBarrier _lifeTimeSystemBarrier;
 
-        protected override void OnCreateManager(int capacity)
+        protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
-            base.OnCreateManager(capacity);
-            _entityManager = World.Active.GetExistingManager<EntityManager>();
-        }
-
-        protected override void OnUpdate()
-        {
-            var deltaTime = Time.deltaTime;
-            var entityToDestroy = new NativeList<Entity>(Allocator.Temp);
-            for (var i = 0; i < _group.Length; i++)
+            var job = new LifeTimeJob
             {
-                var lifeTime = _group.LifeTime[i];
-                lifeTime.TimeLeft -= deltaTime;
-                _group.LifeTime[i] = lifeTime;
-                if (lifeTime.TimeLeft <= 0)
-                {
-                    entityToDestroy.Add(_group.Entity[i]);
-                }
-            }
+                DeltaTime = Time.deltaTime,
+                LifeTime = _group.LifeTime,
+                Entity = _group.Entity,
+                CommandBuffer = _lifeTimeSystemBarrier.CreateCommandBuffer()
+            };
 
-            for (var i = 0; i < entityToDestroy.Length; i++)
-            {
-                _entityManager.DestroyEntity(entityToDestroy[i]);
-            }
-            entityToDestroy.Dispose();
+            return job.Schedule(inputDeps);
         }
     }
 }
