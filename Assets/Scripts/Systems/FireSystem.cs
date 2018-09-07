@@ -45,7 +45,7 @@ namespace Game.Systems
         {
             var entity = _entityManager.Instantiate(GetBulletPrefab());
             _entityManager.SetComponentData(entity, new Position{Value = position});
-            _entityManager.AddComponentData(entity, new Movement(direction, 1f));
+            _entityManager.AddComponentData(entity, new Movement(direction, 2f));
             _entityManager.AddComponentData(entity, new LifeTime{TimeLeft = 5.0f});
             _entityManager.AddComponentData(entity, new Bullet());
         }

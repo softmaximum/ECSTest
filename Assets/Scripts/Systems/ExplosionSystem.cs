@@ -19,6 +19,14 @@ namespace Game.Systems
 
         protected override void OnUpdate()
         {
+            for (var i = 0; i < _group.Length; i++)
+            {
+                MakeDamage(_group.Explosions[i]);
+            }
+        }
+
+        private void MakeDamage(Explosion explosion)
+        {
 
         }
     }

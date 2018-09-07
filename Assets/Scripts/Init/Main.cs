@@ -26,7 +26,7 @@ namespace Game.Init
 			var entityManager = World.Active.GetOrCreateManager<EntityManager>();
 
 			CreatePlayer(entityManager);
-//			CreateSpawner(entityManager);
+			CreateSpawner(entityManager);
 //			CreateBlocks(entityManager);
 		}
 
@@ -35,7 +35,7 @@ namespace Game.Init
 			var spawnerArchtype = entityManager.CreateArchetype
 			(
 				typeof(Spawner),
-				typeof(Position)
+				typeof(Timer)
 			);
 
 			var spawner = entityManager.CreateEntity(spawnerArchtype);
@@ -45,6 +45,7 @@ namespace Game.Init
 				Count = 3,
 				Radius = 5
 			});
+			entityManager.SetComponentData(spawner, new Timer{Repeat = true, Interval = 3.0f});
 		}
 
 		private void CreatePlayer(EntityManager entityManager)
@@ -60,6 +61,7 @@ namespace Game.Init
 			);
 
 			var player = entityManager.CreateEntity(playerArchetype);
+			entityManager.SetComponentData(player, new Position{Value = new float3(0.0f, -8.0f, 0.0f)});
 			entityManager.SetComponentData(player, new Rotation{Value = quaternion.identity});
 			entityManager.SetComponentData(player, new Scale{Value = new float3(1.0f, 1.0f, 1.0f)});
 			entityManager.SetSharedComponentData(player, new MeshInstanceRenderer
