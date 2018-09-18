@@ -4,7 +4,7 @@ using Unity.Jobs;
 
 namespace Jobs
 {
-    public class TimerJob : IJob
+    public struct TimerJob : IJob
     {
         public ComponentDataArray<Timer> Timer;
         public EntityArray Entity;
@@ -19,6 +19,15 @@ namespace Jobs
                 lifeTime.Time += DeltaTime;
                 if (lifeTime.Time >= lifeTime.Interval)
                 {
+                    lifeTime.RepeatCount--;
+                    if (lifeTime.RepeatCount == 0)
+                    {
+                        CommandBuffer.RemoveComponent<Timer>(Entity[i]);
+                    }
+                    else
+                    {
+                        lifeTime.Time = 0;
+                    }
                     CommandBuffer.AddComponent(Entity[i], new TimerElapsed());
                 }
                 Timer[i] = lifeTime;
