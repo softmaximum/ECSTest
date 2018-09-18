@@ -27,7 +27,6 @@ namespace Game.Init
 
 			CreatePlayer(entityManager);
 			CreateSpawner(entityManager);
-//			CreateBlocks(entityManager);
 		}
 
 		private void CreateSpawner(EntityManager entityManager)
@@ -69,33 +68,6 @@ namespace Game.Init
 				mesh = _playerMesh,
 				material = _playerMaterial
 			});
-		}
-
-		private void CreateBlocks(EntityManager entityManager)
-		{
-			var blockAcrhetype = entityManager.CreateArchetype
-			(
-				typeof(Rotation),
-				typeof(Position),
-				typeof(MeshInstanceRenderer),
-				typeof(Block)
-			);
-
-			for (var i = -BlocksCount; i < BlocksCount; i++)
-			{
-				for (var j = -BlocksCount; j < BlocksCount; j++)
-				{
-					var block = entityManager.CreateEntity(blockAcrhetype);
-					entityManager.SetSharedComponentData(block, new MeshInstanceRenderer
-					{
-						mesh = _blockMesh,
-						material = _blockMaterial
-					});
-
-					entityManager.SetComponentData(block, new Position {Value = new float3(i, j, 0)});
-					entityManager.SetComponentData(block, new Rotation {Value = quaternion.identity});
-				}
-			}
 		}
 	}
 }
