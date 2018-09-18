@@ -22,7 +22,7 @@ namespace Game.Systems
         {
             for (var i = 0; i < _group.Length; i++)
             {
-                EntityManager.DestroyEntity(_group.Entity[i]);
+                PostUpdateCommands.DestroyEntity(_group.Entity[i]);
             }
         }
     }

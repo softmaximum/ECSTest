@@ -12,8 +12,6 @@ namespace Game.Init
 		private const int BlocksCount = 10;
 		[SerializeField] private Mesh _playerMesh;
 		[SerializeField] private Material _playerMaterial;
-		[SerializeField] private Mesh _blockMesh;
-		[SerializeField] private Material _blockMaterial;
 		[SerializeField] private GameObject _spawnPrefab;
 		[SerializeField] private GameObject _bulletPrefab;
 		[SerializeField] private GameObject _explosionPrefab;
