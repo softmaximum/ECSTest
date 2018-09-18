@@ -25,7 +25,7 @@ namespace Game.Systems
 
         private EntityManager _entityManager;
 
-        protected override void OnCreateManager(int capacity)
+        protected override void OnCreateManager()
         {
             _entityManager = World.Active.GetExistingManager<EntityManager>();
         }
@@ -36,7 +36,7 @@ namespace Game.Systems
             {
                 if (Input.GetKeyUp(KeyCode.G))
                 {
-                    MakeFire(_group.Position[i].Value, math.up(_group.Rotation[i].Value));
+                    MakeFire(_group.Position[i].Value, math.up());
                 }
             }
         }

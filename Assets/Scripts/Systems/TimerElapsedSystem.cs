@@ -1,5 +1,6 @@
 ﻿using Game.Components;
 using Unity.Entities;
+using UnityEngine;
 
 namespace Game.Systems
 {
@@ -22,7 +23,11 @@ namespace Game.Systems
             for (var i = 0; i < _grpup.Length; i++)
             {
                 var timer = _grpup.Timer[i];
-                if (!timer.Repeat)
+                var repeatCount = timer.RepeatCount;
+                repeatCount--;
+                timer.RepeatCount = repeatCount;
+
+                if (timer.RepeatCount == 0)
                 {
                     EntityManager.AddComponent(_grpup.Entity[i], ComponentType.Create<DestroyEntity>());
                 }

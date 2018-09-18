@@ -283,7 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c2041e1a67e004a964fc7cf589260d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  _playerMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   _playerMaterial: {fileID: 2100000, guid: eb7dc1c7547924637afd186c52466019, type: 2}
   _blockMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   _blockMaterial: {fileID: 2100000, guid: eb7dc1c7547924637afd186c52466019, type: 2}

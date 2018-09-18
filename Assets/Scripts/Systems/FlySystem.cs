@@ -16,7 +16,7 @@ namespace Game.Systems
                 DeltaTime = Time.deltaTime,
                 FlyAway = Input.GetKey(KeyCode.F)
             };
-            return job.Schedule(this, 1, inputDeps);
+            return job.Schedule(this, inputDeps);
         }
     }
 }

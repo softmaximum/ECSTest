@@ -25,10 +25,9 @@ namespace Game.Systems
                     x = Input.mousePosition.x,
                     y = Input.mousePosition.y
                 }
-                
-            };
 
-            return job.Schedule(this, 1, inputDeps);
+            };
+            return job.Schedule(this,inputDeps);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Game.Systems
 		{
 			var job = new PlayerMovementJob();
 
-			return job.Schedule(this, 1, inputDeps);
+			return job.Schedule(this, inputDeps);
 		}
 	}
 

@@ -45,7 +45,7 @@ namespace Game.Init
 				Count = 3,
 				Radius = 5
 			});
-			entityManager.SetComponentData(spawner, new Timer{Repeat = true, Interval = 3.0f});
+			entityManager.SetComponentData(spawner, new Timer{RepeatCount = 1, Interval = 3.0f});
 		}
 
 		private void CreatePlayer(EntityManager entityManager)

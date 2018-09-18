@@ -6,6 +6,6 @@ namespace Game.Components
     {
         public float Interval;
         public float Time;
-        public bool Repeat;
+        public int RepeatCount;
     }
 }
