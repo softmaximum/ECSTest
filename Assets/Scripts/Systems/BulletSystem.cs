@@ -1,10 +1,12 @@
-﻿
+﻿using Unity.Collections;
 using Game.Components;
 using Game.Init;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UpdateGroups;
+using Collision = Game.Components.Collision;
 
 namespace Game.Systems
 {
@@ -15,23 +17,63 @@ namespace Game.Systems
         {
             public ComponentDataArray<Bullet> Bullets;
             public ComponentDataArray<Position> Positions;
-            public ComponentDataArray<DestroyEntity> Destroyed;
+            [ReadOnly]
+            public SharedComponentDataArray<Collision> Collisions;
             public EntityArray Entites;
             public readonly int Length;
         }
 
         [Inject] private BulletGroup _group;
+        private ComponentGroup _targetsComponentGroup;
+
+        protected override void OnCreateManager()
+        {
+            _targetsComponentGroup =
+                GetComponentGroup(typeof(Collision), typeof(Position), ComponentType.Subtractive<Bullet>());
+        }
 
         protected override void OnUpdate()
         {
+            var collisionPositions = _targetsComponentGroup.GetComponentDataArray<Position>();
+            var collisions = _targetsComponentGroup.GetSharedComponentDataArray<Collision>();
+            var entities = _targetsComponentGroup.GetEntityArray();
+
             for (var i = 0; i < _group.Length; i++)
             {
-                var position = _group.Positions[i].Value;
-                var entity = EntityManager.Instantiate(GetExplosionPrefab());
-                EntityManager.AddComponentData(entity, new LifeTime{TimeLeft = 3.0f});
-                EntityManager.AddComponentData(entity, new Explosion());
-                EntityManager.SetComponentData(entity, new Position{Value = position});
+                var bulletPosition = _group.Positions[i];
+                var bulletCollision = _group.Collisions[i];
+                if (CheckBulletCollision(_group.Entites[i], bulletPosition, bulletCollision,
+                    collisionPositions, collisions, entities))
+                {
+                    CreateExplosion(bulletPosition.Value);
+                }
             }
+        }
+
+        private bool CheckBulletCollision(Entity bullet, Position bulletPosition, Collision bulletCollision,
+            ComponentDataArray<Position> collisionPositions,
+            SharedComponentDataArray<Collision> collisions,
+            EntityArray entities)
+        {
+            for (var i = 0; i < collisionPositions.Length; i++)
+            {
+                var distance = math.length(bulletPosition.Value - collisionPositions[i].Value);
+                if (distance <= bulletCollision.Radius + collisions[i].Radius)
+                {
+                    EntityManager.AddComponent(entities[i], ComponentType.Create<DestroyEntity>());
+                    EntityManager.AddComponent(bullet, ComponentType.Create<DestroyEntity>());
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void CreateExplosion(float3 position)
+        {
+            var entity = EntityManager.Instantiate(GetExplosionPrefab());
+            EntityManager.AddComponentData(entity, new LifeTime {TimeLeft = 3.0f});
+            EntityManager.AddComponentData(entity, new Explosion());
+            EntityManager.SetComponentData(entity, new Position {Value = position});
         }
 
         private static GameObject GetExplosionPrefab()
