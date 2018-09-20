@@ -23,13 +23,6 @@ namespace Game.Systems
 
         [Inject] private PlayerGroup _group;
 
-        private EntityManager _entityManager;
-
-        protected override void OnCreateManager()
-        {
-            _entityManager = World.Active.GetExistingManager<EntityManager>();
-        }
-
         protected override void OnUpdate()
         {
             for (var i = 0; i < _group.Length; i++)
@@ -43,11 +36,11 @@ namespace Game.Systems
 
         private void MakeFire(float3 position, float3 direction)
         {
-            var entity = _entityManager.Instantiate(GetBulletPrefab());
-            _entityManager.SetComponentData(entity, new Position{Value = position});
-            _entityManager.AddComponentData(entity, new Movement(direction, 2f));
-            _entityManager.AddComponentData(entity, new LifeTime{TimeLeft = 30.0f});
-            _entityManager.AddComponentData(entity, new Bullet());
+            var entity = EntityManager.Instantiate(GetBulletPrefab());
+            EntityManager.SetComponentData(entity, new Position{Value = position});
+            EntityManager.AddComponentData(entity, new Movement(direction, 2f));
+            EntityManager.AddComponentData(entity, new LifeTime{TimeLeft = 30.0f});
+            EntityManager.AddComponentData(entity, new Bullet());
         }
 
         private static GameObject GetBulletPrefab()

@@ -37,6 +37,7 @@ namespace Game.Systems
             var collisionPositions = _targetsComponentGroup.GetComponentDataArray<Position>();
             var collisions = _targetsComponentGroup.GetSharedComponentDataArray<Collision>();
             var entities = _targetsComponentGroup.GetEntityArray();
+            var explosions = new NativeList<Position>(Allocator.Temp);
 
             for (var i = 0; i < _group.Length; i++)
             {
@@ -45,9 +46,15 @@ namespace Game.Systems
                 if (CheckBulletCollision(_group.Entites[i], bulletPosition, bulletCollision,
                     collisionPositions, collisions, entities))
                 {
-                    CreateExplosion(bulletPosition.Value);
+                    explosions.Add(bulletPosition);
                 }
             }
+
+            for (var i = 0; i < explosions.Length; i++)
+            {
+                CreateExplosion(explosions[i].Value);
+            }
+            explosions.Dispose();
         }
 
         private bool CheckBulletCollision(Entity bullet, Position bulletPosition, Collision bulletCollision,
@@ -60,8 +67,8 @@ namespace Game.Systems
                 var distance = math.length(bulletPosition.Value - collisionPositions[i].Value);
                 if (distance <= bulletCollision.Radius + collisions[i].Radius)
                 {
-                    EntityManager.AddComponent(entities[i], ComponentType.Create<DestroyEntity>());
-                    EntityManager.AddComponent(bullet, ComponentType.Create<DestroyEntity>());
+                    PostUpdateCommands.AddComponent(entities[i],  new DestroyEntity());
+                    PostUpdateCommands.AddComponent(bullet, new DestroyEntity());
                     return true;
                 }
             }
