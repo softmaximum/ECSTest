@@ -38,13 +38,14 @@ namespace Game.Systems
             var collisions = _targetsComponentGroup.GetSharedComponentDataArray<Collision>();
             var entities = _targetsComponentGroup.GetEntityArray();
             var explosions = new NativeList<Position>(Allocator.Temp);
+            var entitiesToDestroy = new NativeList<Entity>(Allocator.Temp);
 
             for (var i = 0; i < _group.Length; i++)
             {
                 var bulletPosition = _group.Positions[i];
                 var bulletCollision = _group.Collisions[i];
                 if (CheckBulletCollision(_group.Entites[i], bulletPosition, bulletCollision,
-                    collisionPositions, collisions, entities))
+                    collisionPositions, collisions, entities, entitiesToDestroy))
                 {
                     explosions.Add(bulletPosition);
                 }
@@ -54,21 +55,32 @@ namespace Game.Systems
             {
                 CreateExplosion(explosions[i].Value);
             }
+
+            DestroyEntities(entitiesToDestroy);
             explosions.Dispose();
+            entitiesToDestroy.Dispose();
         }
 
         private bool CheckBulletCollision(Entity bullet, Position bulletPosition, Collision bulletCollision,
             ComponentDataArray<Position> collisionPositions,
             SharedComponentDataArray<Collision> collisions,
-            EntityArray entities)
+            EntityArray entities, NativeList<Entity> entitiesToDestroy)
         {
             for (var i = 0; i < collisionPositions.Length; i++)
             {
                 var distance = math.length(bulletPosition.Value - collisionPositions[i].Value);
                 if (distance <= bulletCollision.Radius + collisions[i].Radius)
                 {
-                    PostUpdateCommands.AddComponent(entities[i],  new DestroyEntity());
-                    PostUpdateCommands.AddComponent(bullet, new DestroyEntity());
+                    if (!entitiesToDestroy.Contains(entities[i]))
+                    {
+                        entitiesToDestroy.Add(entities[i]);
+                    }
+
+                    if (!entitiesToDestroy.Contains(bullet))
+                    {
+                        entitiesToDestroy.Add(bullet);
+                    }
+
                     return true;
                 }
             }
@@ -81,6 +93,14 @@ namespace Game.Systems
             EntityManager.AddComponentData(entity, new LifeTime {TimeLeft = 3.0f});
             EntityManager.AddComponentData(entity, new Explosion());
             EntityManager.SetComponentData(entity, new Position {Value = position});
+        }
+
+        private void DestroyEntities(NativeList<Entity> entities)
+        {
+            for (var i = 0; i < entities.Length; i++)
+            {
+                EntityManager.AddComponent(entities[i], ComponentType.Create<DestroyEntity>());
+            }
         }
 
         private static GameObject GetExplosionPrefab()
