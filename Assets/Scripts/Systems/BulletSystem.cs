@@ -9,27 +9,18 @@ using UpdateGroups;
 using Collision = Game.Components.Collision;
 
 namespace Game.Systems
-{
+{    
     [UpdateInGroup(typeof(ExecuteUpdateGroup))]
     public class BulletSystem : ComponentSystem
     {
-        private struct BulletGroup
-        {
-            public ComponentDataArray<Bullet> Bullets;
-            public ComponentDataArray<Position> Positions;
-            [ReadOnly]
-            public SharedComponentDataArray<Collision> Collisions;
-            public EntityArray Entites;
-            public readonly int Length;
-        }
-
-        [Inject] private BulletGroup _group;
         private ComponentGroup _targetsComponentGroup;
+        private ComponentGroup _bulletsComponentGroup;
 
         protected override void OnCreateManager()
         {
             _targetsComponentGroup =
                 GetComponentGroup(typeof(Collision), typeof(Position), ComponentType.Subtractive<Bullet>());
+            _bulletsComponentGroup = GetComponentGroup(typeof(Bullet), typeof(Position), typeof(Collision));
         }
 
         protected override void OnUpdate()
@@ -37,14 +28,20 @@ namespace Game.Systems
             var collisionPositions = _targetsComponentGroup.GetComponentDataArray<Position>();
             var collisions = _targetsComponentGroup.GetSharedComponentDataArray<Collision>();
             var entities = _targetsComponentGroup.GetEntityArray();
+
+            var bulletPositions = _bulletsComponentGroup.GetComponentDataArray<Position>();
+            var bulletCollisions = _bulletsComponentGroup.GetSharedComponentDataArray<Collision>();
+            var bulletEnities = _bulletsComponentGroup.GetEntityArray();
+                   
             var explosions = new NativeList<Position>(Allocator.Temp);
             var entitiesToDestroy = new NativeList<Entity>(Allocator.Temp);
 
-            for (var i = 0; i < _group.Length; i++)
+            for (var i = 0; i < bulletPositions.Length; i++)
             {
-                var bulletPosition = _group.Positions[i];
-                var bulletCollision = _group.Collisions[i];
-                if (CheckBulletCollision(_group.Entites[i], bulletPosition, bulletCollision,
+                var bulletPosition = bulletPositions[i];
+                var bulletCollision = bulletCollisions[i];
+                
+                if (CheckBulletCollision(bulletEnities[i], bulletPosition, bulletCollision,
                     collisionPositions, collisions, entities, entitiesToDestroy))
                 {
                     explosions.Add(bulletPosition);
