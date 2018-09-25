@@ -13,14 +13,17 @@ namespace Game.Systems
     [UpdateInGroup(typeof(ExecuteUpdateGroup))]
     public class BulletSystem : ComponentSystem
     {
+        private int PointPerExsplosion = 10;
         private ComponentGroup _targetsComponentGroup;
         private ComponentGroup _bulletsComponentGroup;
+        private ComponentGroup _playerGroup;
 
         protected override void OnCreateManager()
         {
             _targetsComponentGroup =
                 GetComponentGroup(typeof(Collision), typeof(Position), ComponentType.Subtractive<Bullet>());
             _bulletsComponentGroup = GetComponentGroup(typeof(Bullet), typeof(Position), typeof(Collision));
+            _playerGroup = GetComponentGroup(typeof(Player));
         }
 
         protected override void OnUpdate()
@@ -51,6 +54,7 @@ namespace Game.Systems
             for (var i = 0; i < explosions.Length; i++)
             {
                 CreateExplosion(explosions[i].Value);
+                AddScore(PointPerExsplosion);
             }
 
             DestroyEntities(entitiesToDestroy);
@@ -90,6 +94,15 @@ namespace Game.Systems
             EntityManager.AddComponentData(entity, new LifeTime {TimeLeft = 3.0f});
             EntityManager.AddComponentData(entity, new Explosion());
             EntityManager.SetComponentData(entity, new Position {Value = position});
+        }
+
+        private void AddScore(int points)
+        {
+            var entiites = _playerGroup.GetEntityArray();
+            for (var i = 0; i < entiites.Length; i++)
+            {
+                EntityManager.AddComponentData(entiites[i], new ScorePoint {Points = points});
+            }
         }
 
         private void DestroyEntities(NativeList<Entity> entities)

@@ -9,7 +9,9 @@ namespace Game.Init
 {
 	public class Main : MonoBehaviour
 	{
+		public const int MainPlayerId = 1;
 		private const int BlocksCount = 10;
+		
 		[SerializeField] private Mesh _playerMesh;
 		[SerializeField] private Material _playerMaterial;
 		[SerializeField] private GameObject _spawnPrefab;
@@ -54,13 +56,15 @@ namespace Game.Init
 				typeof(Scale),
 				typeof(MeshInstanceRenderer),
 				typeof(PlayerInput),
-				typeof(Player)
+				typeof(Player),
+				typeof(Score)
 			);
 
 			var player = entityManager.CreateEntity(playerArchetype);
 			entityManager.SetComponentData(player, new Position{Value = new float3(0.0f, -8.0f, 0.0f)});
 			entityManager.SetComponentData(player, new Rotation{Value = quaternion.identity});
 			entityManager.SetComponentData(player, new Scale{Value = new float3(1.0f, 1.0f, 1.0f)});
+			entityManager.SetComponentData(player, new Player {Id = MainPlayerId});
 			entityManager.SetSharedComponentData(player, new MeshInstanceRenderer
 			{
 				mesh = _playerMesh,

@@ -12,7 +12,6 @@ namespace Game.Systems
             public ComponentDataArray<Explosion> Explosions;
             public EntityArray Entites;
             public readonly int Length;
-
         }
 
         [Inject] private ExplosionGroup _group;
