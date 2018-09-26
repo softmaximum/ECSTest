@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using System.Collections.Generic;
+using Unity.Collections;
 using Game.Components;
 using Game.Init;
 using Unity.Entities;
@@ -17,6 +18,13 @@ namespace Game.Systems
         private ComponentGroup _targetsComponentGroup;
         private ComponentGroup _bulletsComponentGroup;
         private ComponentGroup _playerGroup;
+        private Dictionary<int, int> _scoresForPlayer;
+        
+        private struct ExplosionInfo
+        {
+            public int PlayerId;
+            public Position Position;
+        }
 
         protected override void OnCreateManager()
         {
@@ -24,6 +32,7 @@ namespace Game.Systems
                 GetComponentGroup(typeof(Collision), typeof(Position), ComponentType.Subtractive<Bullet>());
             _bulletsComponentGroup = GetComponentGroup(typeof(Bullet), typeof(Position), typeof(Collision));
             _playerGroup = GetComponentGroup(typeof(Player));
+            _scoresForPlayer = new Dictionary<int, int>();
         }
 
         protected override void OnUpdate()
@@ -35,27 +44,43 @@ namespace Game.Systems
             var bulletPositions = _bulletsComponentGroup.GetComponentDataArray<Position>();
             var bulletCollisions = _bulletsComponentGroup.GetSharedComponentDataArray<Collision>();
             var bulletEnities = _bulletsComponentGroup.GetEntityArray();
+            var bullets = _bulletsComponentGroup.GetComponentDataArray<Bullet>();
                    
-            var explosions = new NativeList<Position>(Allocator.Temp);
+            var explosions = new NativeList<ExplosionInfo>(Allocator.Temp);
             var entitiesToDestroy = new NativeList<Entity>(Allocator.Temp);
 
             for (var i = 0; i < bulletPositions.Length; i++)
             {
                 var bulletPosition = bulletPositions[i];
                 var bulletCollision = bulletCollisions[i];
+                var bullet = bullets[i];
                 
                 if (CheckBulletCollision(bulletEnities[i], bulletPosition, bulletCollision,
                     collisionPositions, collisions, entities, entitiesToDestroy))
                 {
-                    explosions.Add(bulletPosition);
+                    explosions.Add(new ExplosionInfo{PlayerId = bullet.PlayerId, Position = bulletPosition});
+                }
+            }
+          
+            for (var i = 0; i < explosions.Length; i++)
+            {
+                var info = explosions[i];
+                CreateExplosion(info.Position.Value);
+                if (_scoresForPlayer.ContainsKey(info.PlayerId))
+                {
+                    _scoresForPlayer[info.PlayerId] += PointPerExsplosion; 
+                }
+                else
+                {
+                    _scoresForPlayer.Add(info.PlayerId, PointPerExsplosion); 
                 }
             }
 
-            for (var i = 0; i < explosions.Length; i++)
+            foreach (var player in _scoresForPlayer)
             {
-                CreateExplosion(explosions[i].Value);
-                AddScore(PointPerExsplosion);
+                AddScore(player.Key, player.Value);
             }
+            _scoresForPlayer.Clear();
 
             DestroyEntities(entitiesToDestroy);
             explosions.Dispose();
@@ -96,12 +121,16 @@ namespace Game.Systems
             EntityManager.SetComponentData(entity, new Position {Value = position});
         }
 
-        private void AddScore(int points)
+        private void AddScore(int playerId, int points)
         {
             var entiites = _playerGroup.GetEntityArray();
+            var players = _playerGroup.GetComponentDataArray<Player>();
             for (var i = 0; i < entiites.Length; i++)
             {
-                EntityManager.AddComponentData(entiites[i], new ScorePoint {Points = points});
+                if (players[i].Id == playerId)
+                {
+                    PostUpdateCommands.AddComponent(entiites[i], new ScorePoint {Points = points});
+                }
             }
         }
 

@@ -3,6 +3,7 @@ using Unity.Entities;
 using UnityEngine;
 
 using Game.Components;
+using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UpdateGroups;
@@ -25,13 +26,22 @@ namespace Game.Systems
 
         protected override void OnUpdate()
         {
+            var firePosition = new NativeList<float3>(Allocator.Temp);
+            
             for (var i = 0; i < _group.Length; i++)
             {
                 if (Input.GetKeyUp(KeyCode.G))
                 {
-                    MakeFire(_group.Position[i].Value, math.up());
+                    firePosition.Add(_group.Position[i].Value);
                 }
             }
+
+            for (var j = 0; j < firePosition.Length; j++)
+            {
+                MakeFire(firePosition[j], math.up());           
+            }
+            
+            firePosition.Dispose();
         }
 
         private void MakeFire(float3 position, float3 direction)
@@ -40,7 +50,7 @@ namespace Game.Systems
             EntityManager.SetComponentData(entity, new Position{Value = position});
             EntityManager.AddComponentData(entity, new Movement(direction, 4f));
             EntityManager.AddComponentData(entity, new LifeTime{TimeLeft = 30.0f});
-            EntityManager.AddComponentData(entity, new Bullet());
+            EntityManager.AddComponentData(entity, new Bullet{PlayerId = Main.FirstPlayerId});
         }
 
         private static GameObject GetBulletPrefab()

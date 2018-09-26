@@ -9,8 +9,8 @@ namespace Game.Init
 {
 	public class Main : MonoBehaviour
 	{
-		public const int MainPlayerId = 1;
-		private const int BlocksCount = 10;
+		public const int FirstPlayerId = 1;
+		private const int SecondPlayerId = 2;
 		
 		[SerializeField] private Mesh _playerMesh;
 		[SerializeField] private Material _playerMaterial;
@@ -25,7 +25,8 @@ namespace Game.Init
 		{
 			var entityManager = World.Active.GetOrCreateManager<EntityManager>();
 
-			CreatePlayer(entityManager);
+			CreatePlayer(entityManager, FirstPlayerId);
+			CreatePlayer(entityManager, SecondPlayerId);
 			CreateSpawner(entityManager);
 		}
 
@@ -47,7 +48,7 @@ namespace Game.Init
 			entityManager.SetComponentData(spawner, new Timer{RepeatCount = int.MaxValue, Interval = 3.0f});
 		}
 
-		private void CreatePlayer(EntityManager entityManager)
+		private void CreatePlayer(EntityManager entityManager, int id)
 		{
 			var playerArchetype = entityManager.CreateArchetype
 			(
@@ -64,7 +65,7 @@ namespace Game.Init
 			entityManager.SetComponentData(player, new Position{Value = new float3(0.0f, -8.0f, 0.0f)});
 			entityManager.SetComponentData(player, new Rotation{Value = quaternion.identity});
 			entityManager.SetComponentData(player, new Scale{Value = new float3(1.0f, 1.0f, 1.0f)});
-			entityManager.SetComponentData(player, new Player {Id = MainPlayerId});
+			entityManager.SetComponentData(player, new Player {Id = id});
 			entityManager.SetSharedComponentData(player, new MeshInstanceRenderer
 			{
 				mesh = _playerMesh,
