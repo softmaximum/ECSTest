@@ -1,6 +1,7 @@
 using Game.Components;
 using Unity.Entities;
 using Unity.Collections;
+using UnityEngine;
 
 namespace Game.Systems
 {
@@ -15,21 +16,30 @@ namespace Game.Systems
             public EntityArray Entities;
             public readonly int Length;
         }
-        
+
         [Inject]
         private MovementGroup _group;
-        
+
         protected override void OnUpdate()
         {
             for (var i = 0; i < _group.Inputs.Length; i++)
             {
                 var input = _group.Inputs[i];
-                if (input.Clicked <= 0) 
+                if (input.Clicked <= 0)
                     continue;
-                
+
                 input.Clicked = 0;
                 _group.Inputs[i] = input;
-                PostUpdateCommands.AddComponent(_group.Entities[i], new CharacterMovement(input.ClickPosition, MovementSpeed));
+
+
+                if (EntityManager.HasComponent<CharacterMovement>(_group.Entities[i]))
+                {
+                    PostUpdateCommands.SetComponent(_group.Entities[i], new CharacterMovement(input.ClickPosition, MovementSpeed));
+                }
+                else
+                {
+                    PostUpdateCommands.AddComponent(_group.Entities[i], new CharacterMovement(input.ClickPosition, MovementSpeed));
+                }
             }
         }
     }

@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Game.Systems
 {
+    [UpdateBefore(typeof(UnityEngine.Experimental.PlayerLoop.FixedUpdate))]
     public class CharacterMovementSystem : JobComponentSystem
     {
         private struct MovementGroup
@@ -19,7 +20,7 @@ namespace Game.Systems
 
         [Inject] private MovementGroup _group;
         [Inject] private CharacterMovementBarrier _barrier;
-        
+
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
             var job = new CharacterMovementJob
@@ -31,6 +32,6 @@ namespace Game.Systems
                 Entities = _group.Entities,
             };
             return job.Schedule(inputDeps);
-        }   
+        }
     }
 }
