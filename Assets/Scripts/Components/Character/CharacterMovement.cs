@@ -8,12 +8,12 @@ namespace Game.Components
     {
         public float3 Target;
         public float DistanceToTarget;
-        public float Speed;
+        public float3 Speed;
 
-        public CharacterMovement(float3 target, float speed)
+        public CharacterMovement(float3 target, float3 speed)
         {
-            Target = target;
             Speed = speed;
+            Target = target;
             DistanceToTarget = float.MaxValue;
         }
     }

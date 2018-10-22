@@ -27,11 +27,11 @@ namespace Game.Systems
             {
                 DeltaTime = Time.deltaTime,
                 Buffer = _barrier.CreateCommandBuffer(),
-                Positons = _group.Positons,
+                Positions = _group.Positons,
                 Movements = _group.Movements,
                 Entities = _group.Entities,
             };
-            return job.Schedule(inputDeps);
+            return job.Schedule(_group.Length, 64, inputDeps);
         }
     }
 }

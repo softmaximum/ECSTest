@@ -1,4 +1,6 @@
 using Game.Components;
+using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -7,37 +9,34 @@ using UnityEngine;
 
 namespace Jobs
 {
-    public struct CharacterMovementJob : IJob
+    public struct CharacterMovementJob : IJobParallelFor
     {
         private const float MinSqrDistance = 0.01f;
-        
-        public ComponentDataArray<Position> Positons;
+
+        public ComponentDataArray<Position> Positions;
         public ComponentDataArray<CharacterMovement> Movements;
         public EntityArray Entities;
         public float DeltaTime;
+        [ReadOnly]
         public EntityCommandBuffer Buffer;
 
-        public void Execute()
+        public void Execute(int i)
         {
-            for (var i = 0; i < Entities.Length; i++)
-            {
-                var position = Positons[i];
-                var movement = Movements[i];
-                var direction = math.normalize(movement.Target - position.Value);
-                
-                position.Value += direction * movement.Speed * DeltaTime;
-                
-                var distanceSqr = math.lengthsq(position.Value - movement.Target);       
-                
-                if (distanceSqr > movement.DistanceToTarget)
-                {
-                    Buffer.RemoveComponent<CharacterMovement>(Entities[i]);                    
-                }
+            var position = Positions[i];
+            var movement = Movements[i];
 
-                movement.DistanceToTarget = distanceSqr;
-                Positons[i] = position;
-                Movements[i] = movement;
+            position.Value += DeltaTime * movement.Speed;
+
+            var distanceSqr = math.lengthsq(position.Value - movement.Target);
+
+            if (distanceSqr > movement.DistanceToTarget)
+            {
+                Buffer.RemoveComponent<CharacterMovement>(Entities[i]);
             }
+
+            movement.DistanceToTarget = distanceSqr;
+            Positions[i] = position;
+            Movements[i] = movement;
         }
     }
 }

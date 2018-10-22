@@ -11,6 +11,7 @@ namespace Game.Init
 
         private void Start()
         {
+            Application.targetFrameRate = -1;
             Init();
         }
 
