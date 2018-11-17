@@ -1,7 +1,6 @@
 ﻿using Game.Init;
 using Unity.Entities;
 using UnityEngine;
-
 using Game.Components;
 using Unity.Collections;
 using Unity.Mathematics;
@@ -27,7 +26,7 @@ namespace Game.Systems
         protected override void OnUpdate()
         {
             var firePosition = new NativeList<float3>(Allocator.Temp);
-            
+
             for (var i = 0; i < _group.Length; i++)
             {
                 if (Input.GetKeyUp(KeyCode.G))
@@ -38,9 +37,9 @@ namespace Game.Systems
 
             for (var j = 0; j < firePosition.Length; j++)
             {
-                MakeFire(firePosition[j], math.up());           
+                MakeFire(firePosition[j], math.up());
             }
-            
+
             firePosition.Dispose();
         }
 

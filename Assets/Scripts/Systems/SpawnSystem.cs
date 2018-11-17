@@ -43,7 +43,7 @@ namespace Game.Systems
         {
             const int randomRange = 16;
             var x = Random.Range(-randomRange, randomRange + 1);
-            return new float3(x, 8.0f, 0.0f);
+            return new float3(x, 0.0f, 0.0f);
         }
     }
 }
