@@ -1,12 +1,11 @@
-using System.Collections.Generic;
 using Game.Components;
 using UI;
 using Unity.Entities;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.Systems
 {
+	[UpdateAfter(typeof(CharacterCollisionSystem))]
     public class CharacterHUDSystem : ComponentSystem
     {
         private ComponentGroup _playerGroup;
@@ -27,7 +26,9 @@ namespace Game.Systems
 
             for (var i = 0; i < players.Length; i++)
             {
-                _labelText.Label.text = $"Player: {players[i].Id}\nHealth: {healths[i].Value}";
+                var health = healths[i].Value;
+                var text = health <= 0 ? "<color=red>Dead</color>" : health.ToString();
+                _labelText.Label.text = $"Player: {players[i].Id}\n<color=green>Health: {text}</color>";
                 break;
             }
         }

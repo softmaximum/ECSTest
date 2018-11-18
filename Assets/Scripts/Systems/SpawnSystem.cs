@@ -5,10 +5,12 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using UpdateGroups;
 using Random = UnityEngine.Random;
 
 namespace Game.Systems
 {
+	[UpdateInGroup(typeof(ExecuteUpdateGroup))]
     public class SpawnSystem : ComponentSystem
     {
         private struct SpawnGroup
