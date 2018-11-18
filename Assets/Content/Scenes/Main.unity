@@ -542,7 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07cf8ee6dbaf4e88809e5035c44cbe30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Text: {fileID: 1147477293}
+  Label: {fileID: 1147477293}
   PlayerId: 1
 --- !u!1 &1755216133
 GameObject:
@@ -571,7 +571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c2041e1a67e004a964fc7cf589260d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  _playerMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 3}
   _playerMaterial: {fileID: 2100000, guid: eb7dc1c7547924637afd186c52466019, type: 2}
   _spawnPrefab: {fileID: 1130895650402398, guid: bf9497fd957e94e5da3a668f9d9978c0,
     type: 2}
@@ -639,7 +639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07cf8ee6dbaf4e88809e5035c44cbe30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Text: {fileID: 2093924379}
+  Label: {fileID: 2093924379}
   PlayerId: 2
 --- !u!114 &2093924379
 MonoBehaviour:

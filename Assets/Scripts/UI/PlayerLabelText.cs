@@ -3,9 +3,9 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class PlayerScoreText : MonoBehaviour
+    public class PlayerLabelText : MonoBehaviour
     {
-        public Text _Text;
+        public Text Label;
         public int PlayerId;
     }
 }

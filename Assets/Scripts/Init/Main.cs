@@ -11,7 +11,7 @@ namespace Game.Init
 	{
 		public const int FirstPlayerId = 1;
 		private const int SecondPlayerId = 2;
-		
+
 		[SerializeField] private Mesh _playerMesh;
 		[SerializeField] private Material _playerMaterial;
 		[SerializeField] private GameObject _spawnPrefab;
@@ -42,8 +42,7 @@ namespace Game.Init
 			entityManager.SetSharedComponentData(spawner, new Spawner
 			{
 				Prefab = _spawnPrefab,
-				Count = 3,
-				Radius = 5
+				Count = 3
 			});
 			entityManager.SetComponentData(spawner, new Timer{RepeatCount = int.MaxValue, Interval = 3.0f});
 		}

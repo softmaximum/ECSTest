@@ -4,8 +4,8 @@ using Unity.Entities;
 namespace Game.Components
 {
     [Serializable]
-    public struct Bomb : ISharedComponentData
+    public struct Health : ISharedComponentData
     {
-        public int Id;
+        public int Value;
     }
 }

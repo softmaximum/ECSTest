@@ -28,7 +28,6 @@ namespace Game.Init
             var character = entityManager.Instantiate(_character);
             entityManager.AddSharedComponentData(character, new Character {Id = Characterid});
             entityManager.AddComponentData(character, new CharacterPlayerInput());
-            entityManager.AddComponentData(character, new Bullet {PlayerId = Characterid});
         }
 
         private void CreateSpawner(EntityManager entityManager)
@@ -43,10 +42,9 @@ namespace Game.Init
             entityManager.SetSharedComponentData(spawner, new Spawner
             {
                 Prefab = _bompPrefab,
-                Count = 1,
-                Radius = 5
+                Count = 1
             });
-            entityManager.SetComponentData(spawner, new Timer{RepeatCount = 1, Interval = 3.0f});
+            entityManager.SetComponentData(spawner, new Timer{RepeatCount = int.MaxValue, Interval = 3.0f});
         }
     }
 }
