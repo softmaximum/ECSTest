@@ -9,5 +9,4 @@ namespace Game.Components
     {
         public GameObject Prefab;
         public int Count;
-        public float Radius;
     }}

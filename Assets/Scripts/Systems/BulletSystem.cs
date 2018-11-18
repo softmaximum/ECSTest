@@ -10,7 +10,7 @@ using UpdateGroups;
 using Collision = Game.Components.Collision;
 
 namespace Game.Systems
-{    
+{
     [UpdateInGroup(typeof(ExecuteUpdateGroup))]
     public class BulletSystem : ComponentSystem
     {
@@ -19,7 +19,7 @@ namespace Game.Systems
         private ComponentGroup _bulletsComponentGroup;
         private ComponentGroup _playerGroup;
         private Dictionary<int, int> _scoresForPlayer;
-        
+
         private struct ExplosionInfo
         {
             public int PlayerId;
@@ -45,7 +45,7 @@ namespace Game.Systems
             var bulletCollisions = _bulletsComponentGroup.GetSharedComponentDataArray<Collision>();
             var bulletEnities = _bulletsComponentGroup.GetEntityArray();
             var bullets = _bulletsComponentGroup.GetComponentDataArray<Bullet>();
-                   
+
             var explosions = new NativeList<ExplosionInfo>(Allocator.Temp);
             var entitiesToDestroy = new NativeList<Entity>(Allocator.Temp);
 
@@ -54,25 +54,25 @@ namespace Game.Systems
                 var bulletPosition = bulletPositions[i];
                 var bulletCollision = bulletCollisions[i];
                 var bullet = bullets[i];
-                
+
                 if (CheckBulletCollision(bulletEnities[i], bulletPosition, bulletCollision,
                     collisionPositions, collisions, entities, entitiesToDestroy))
                 {
                     explosions.Add(new ExplosionInfo{PlayerId = bullet.PlayerId, Position = bulletPosition});
                 }
             }
-          
+
             for (var i = 0; i < explosions.Length; i++)
             {
                 var info = explosions[i];
                 CreateExplosion(info.Position.Value);
                 if (_scoresForPlayer.ContainsKey(info.PlayerId))
                 {
-                    _scoresForPlayer[info.PlayerId] += PointPerExsplosion; 
+                    _scoresForPlayer[info.PlayerId] += PointPerExsplosion;
                 }
                 else
                 {
-                    _scoresForPlayer.Add(info.PlayerId, PointPerExsplosion); 
+                    _scoresForPlayer.Add(info.PlayerId, PointPerExsplosion);
                 }
             }
 
@@ -144,7 +144,7 @@ namespace Game.Systems
 
         private static GameObject GetExplosionPrefab()
         {
-            var main = Object.FindObjectOfType<Main>();
+            var main = Object.FindObjectOfType<PrefabHolder>();
             return main.ExplosionPrefab;
         }
     }
