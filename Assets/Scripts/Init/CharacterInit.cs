@@ -6,8 +6,11 @@ namespace Game.Init
 {
     public class CharacterInit : MonoBehaviour
     {
-        private const int Characterid = 1;
-        [SerializeField] private GameObject _character;
+        private const int FirstCharacterid = 1;
+        private const int SecondCharacterid = 2;
+
+        [SerializeField] private GameObject _firstCharacter;
+        [SerializeField] private GameObject _secondCharacter;
         [SerializeField] private GameObject _bompPrefab;
 
         private void Start()
@@ -19,15 +22,26 @@ namespace Game.Init
         private void Init()
         {
             var entityManager = World.Active.GetOrCreateManager<EntityManager>();
-            CreateCharacter(entityManager);
+            CreateCharacterInput(entityManager);
+            CreateCharacter(entityManager, _firstCharacter, FirstCharacterid, true);
+            CreateCharacter(entityManager, _secondCharacter, SecondCharacterid, false);
             CreateSpawner(entityManager);
         }
 
-        private void CreateCharacter(EntityManager entityManager)
+        private static void CreateCharacterInput(EntityManager entityManager)
         {
-            var character = entityManager.Instantiate(_character);
-            entityManager.AddSharedComponentData(character, new Character {Id = Characterid});
-            entityManager.AddComponentData(character, new CharacterPlayerInput());
+            var entity = entityManager.CreateEntity();
+            entityManager.AddComponentData(entity, new CharacterPlayerInput());
+        }
+
+        private static void CreateCharacter(EntityManager entityManager, GameObject prefab, int id, bool selected)
+        {
+            var character = entityManager.Instantiate(prefab);
+            entityManager.AddSharedComponentData(character, new Character {Id = id});
+            if (selected)
+            {
+                entityManager.AddComponentData(character, new Selection());
+            }
         }
 
         private void CreateSpawner(EntityManager entityManager)
@@ -44,7 +58,7 @@ namespace Game.Init
                 Prefab = _bompPrefab,
                 Count = 1
             });
-            entityManager.SetComponentData(spawner, new Timer{RepeatCount = int.MaxValue, Interval = 3.0f});
+            entityManager.SetComponentData(spawner, new Timer{RepeatCount = int.MaxValue, Interval = 10.0f});
         }
     }
 }

@@ -20,6 +20,7 @@ namespace Game.Systems
                 DownLeft = Input.GetKeyDown(KeyCode.Z),
                 DownRight = Input.GetKeyDown(KeyCode.X),
                 Fire = Input.GetKeyDown(KeyCode.G),
+                RightMouseButton = Input.GetMouseButton(1),
                 MousePosition =
                 {
                     x = Input.mousePosition.x,

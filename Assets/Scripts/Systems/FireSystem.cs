@@ -16,8 +16,6 @@ namespace Game.Systems
         {
             public ComponentDataArray<Player> Player;
             public ComponentDataArray<Position> Position;
-            public ComponentDataArray<Rotation> Rotation;
-            public EntityArray Entity;
             public readonly int Length;
         }
 

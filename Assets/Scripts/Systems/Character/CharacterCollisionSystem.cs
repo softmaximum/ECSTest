@@ -71,7 +71,6 @@ namespace Game.Systems
                 var info = explosions[i];
                 CreateExplosion(info.Position.Value);
             }
-
             explosions.Dispose();
         }
 

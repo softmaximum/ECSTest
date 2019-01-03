@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace Game.Components
 {
-    public struct Selection : IComponentData
+    public struct Dead : IComponentData
     {
 
     }

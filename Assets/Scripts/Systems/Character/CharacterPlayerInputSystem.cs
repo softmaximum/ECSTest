@@ -12,7 +12,7 @@ namespace Game.Systems
         protected override void OnCreateManager()
         {
             base.OnCreateManager();
-            _group = GetComponentGroup(typeof(Character), typeof(CharacterPlayerInput));
+            _group = GetComponentGroup(typeof(CharacterPlayerInput));
         }
 
         protected override void OnStartRunning()

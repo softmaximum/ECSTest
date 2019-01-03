@@ -1,7 +1,12 @@
+using System;
+using Unity.Entities;
+using UnityEngine;
+
 namespace Game.Components
 {
-    public struct Color
+    [Serializable]
+    public struct CharacterColor : ISharedComponentData
     {
-        
+        public Color Color;
     }
 }

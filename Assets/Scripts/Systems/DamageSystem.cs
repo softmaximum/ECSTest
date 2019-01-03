@@ -31,6 +31,7 @@ namespace Game.Systems
                 if (newHealth <= 0)
                 {
                     newHealth = 0;
+                    PostUpdateCommands.AddComponent(entity, new Dead());
                     PostUpdateCommands.AddComponent(entity, new DestroyEntity());
                 }
 

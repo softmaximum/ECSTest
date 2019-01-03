@@ -1,7 +1,9 @@
+using Unity.Entities;
+
 namespace Game.Components
 {
-    public class Characr
+    public class CharacterColorComponent : SharedComponentDataWrapper<CharacterColor>
     {
-        
+
     }
 }
