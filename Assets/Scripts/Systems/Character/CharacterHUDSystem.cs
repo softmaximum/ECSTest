@@ -15,7 +15,8 @@ namespace Game.Systems
         {
             _playerGroup = GetComponentGroup(
                 typeof(Character),
-                typeof(Health));
+                typeof(Health),
+                typeof(Selection));
             _labelText = Object.FindObjectOfType<PlayerLabelText>();
         }
 
@@ -24,12 +25,15 @@ namespace Game.Systems
             var healths = _playerGroup.GetSharedComponentDataArray<Health>();
             var players = _playerGroup.GetSharedComponentDataArray<Character>();
 
-            for (var i = 0; i < players.Length; i++)
+            if (players.Length > 0)
             {
-                var health = healths[i].Value;
+                var health = healths[0].Value;
                 var text = health <= 0 ? "<color=red>Dead</color>" : health.ToString();
-                _labelText.Label.text = $"Player: {players[i].Id}\n<color=green>Health: {text}</color>";
-                break;
+                _labelText.Label.text = $"Character: {players[0].Id}\n<color=green>Health: {text}</color>";
+            }
+            else
+            {
+                _labelText.Label.text = $"Character: None";
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿
-using Game.Components;
+﻿using Game.Components;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;

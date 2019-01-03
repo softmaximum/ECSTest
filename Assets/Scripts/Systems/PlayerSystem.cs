@@ -12,10 +12,10 @@ namespace Game.Systems
             public ComponentDataArray<Score> Scores;
             public ComponentDataArray<ScorePoint> Points;
             public EntityArray Entites;
-            public readonly int Length;   
+            public readonly int Length;
         }
 
-        [Inject] private PlayerGroup _group; 
+        [Inject] private PlayerGroup _group;
 
         protected override void OnUpdate()
         {

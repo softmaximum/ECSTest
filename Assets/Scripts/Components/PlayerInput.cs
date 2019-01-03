@@ -9,6 +9,7 @@ namespace Game.Components
         public float Vertical;
         public float2 MousePosition;
         public int Fire;
+        public int RightMouseButton;
     }
 
 }

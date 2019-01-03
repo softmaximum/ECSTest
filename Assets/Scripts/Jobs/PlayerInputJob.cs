@@ -3,7 +3,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 
 namespace Jobs
-{       
+{
     public struct PlayerInputJob : IJobProcessComponentData<PlayerInput>
     {
         public bool Left;
@@ -16,6 +16,7 @@ namespace Jobs
         public bool DownRight;
         public float2 MousePosition;
         public bool Fire;
+        public bool RightMouseButton;
 
         public void Execute(ref PlayerInput input)
         {
@@ -23,6 +24,7 @@ namespace Jobs
             input.Vertical = Down || DownLeft || DownRight ? -1f : Up || UpRight || UpLeft ? 1f : 0f;
             input.MousePosition = MousePosition;
             input.Fire = Fire ? 1 : 0;
+            input.RightMouseButton = RightMouseButton ? 1 : 0;
         }
     }
 }
